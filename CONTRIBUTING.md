@@ -16,6 +16,10 @@ We welcome contributions of all kinds, including bug reports, feature requests, 
 8. Push your changes: `git push origin your-branch-name`
 9. **Create a pull request**: Go to the original repository and click "New Pull Request". Provide a clear description of your changes and why they are necessary.
 
+## After Your Pull Request is Merged
+
+Once your pull request is merged, switch to `main` branch `git checkout main`, pull the latest changes `git pull origin main` and now you can delete your branch. If you have any other changes to make, feel free to repeat the process.
+
 ## Reporting Issues
 
 If you find a bug or have a feature request, please open an issue on GitHub. Include as much detail as possible, such as steps to reproduce, expected behavior, and screenshots if relevant.
@@ -29,4 +33,3 @@ We use [black](https://black.readthedocs.io/) for code formatting and [pytest](h
 Be respectful and considerate in all interactions. We follow the [Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/).
 
 Thank you for helping make medsplex better!
-
