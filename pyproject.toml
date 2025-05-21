@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "medsplex"
+version = "0.1.0"
+description = "TBD: descrption goes here"
+authors = [
+    { name = "Isotta Landi", email = "landi.isotta@gmail.com" },
+    { name = "Nicole Bussola", email = "nicole.bussolaceradini@gmail.com" },
+    { name = "Eugenia Alleva", email = "eugeniaalessandrae.allevabonomi@mssm.edu" },
+    { name = "Ernesto Arbitrio", email = "ernesto.arbitrio@gmail.com" },
+]
+readme = "README.md"
+requires-python = ">=3.7"
+license = { text = "MIT" }
+dependencies = [
+    # Add your runtime dependencies here, e.g. "requests>=2.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "isort",
+    "mypy",
+    "flake8",
+    "pylint",
+    "pre-commit",
+]
+
+[tool.setuptools]
+packages = ["medsplex"]
