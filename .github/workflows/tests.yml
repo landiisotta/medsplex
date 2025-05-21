@@ -15,6 +15,12 @@ on:
       - ".github/workflows/tests.yml"
       - ".pre-commit-config.yaml"
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Linting code
+        uses: astral-sh/ruff-action@v3
+
   test:
     runs-on: ubuntu-latest
     strategy:
