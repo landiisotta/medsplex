@@ -16,7 +16,7 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
 dependencies = [
-    # Add your runtime dependencies here, e.g. "requests>=2.0"
+    "pydantic==2.11.7",
 ]
 
 [project.optional-dependencies]
