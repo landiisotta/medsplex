@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -8,8 +8,20 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.WARNING)
 
 
-class Regex(BaseModel):
+class ConfigArguments(BaseModel):
     regex: str = Field(..., description="Regex pattern for matching keywords.")
+    privileging_score: Optional[float] = Field(
+        ge=1.0,
+        le=5.0,
+        description="Annotation score from 1 to 5 for the privileging valence of the keyword.",
+        default=None,
+    )
+    stigmatizing_score: Optional[float] = Field(
+        ge=1.0,
+        le=5.0,
+        description="Annotation score from 1 to 5 for the stigmatizing valence of the keyword.",
+        default=None,
+    )
 
     @field_validator("regex")
     @staticmethod
@@ -21,30 +33,12 @@ class Regex(BaseModel):
         return value
 
 
-class Valence(BaseModel):
-    privileging_score: float = Field(
-        ...,
-        description="Annotation score from 1 to 5 for the privileging valence of the keyword.",
-    )
-    stigmatizing_score: float = Field(
-        ...,
-        description="Annotation score from 1 to 5 for the stigmatizing valence of the keyword.",
-    )
-
-    @field_validator("privileging_score", "stigmatizing_score")
-    @staticmethod
-    def validate_score(value: float) -> float:
-        if not (1.0 <= value <= 5.0):
-            raise ValueError(f"Score must be between 1 and 5, but found {value}.")
-        return value
-
-
 class Chunker(BaseModel):
     """
     Helper
     """
 
-    config: Dict[str, Dict[Regex, Valence]]
+    config: Dict[str, ConfigArguments]
 
     def run(self, text: str, nchr: int) -> List[Dict]:
         if not isinstance(nchr, int) or nchr <= 0:
