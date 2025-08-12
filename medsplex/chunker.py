@@ -21,12 +21,30 @@ class Regex(BaseModel):
         return value
 
 
+class Valence(BaseModel):
+    privileging_score: float = Field(
+        ...,
+        description="Annotation score from 1 to 5 for the privileging valence of the keyword.",
+    )
+    stigmatizing_score: float = Field(
+        ...,
+        description="Annotation score from 1 to 5 for the stigmatizing valence of the keyword.",
+    )
+
+    @field_validator("privileging_score", "stigmatizing_score")
+    @staticmethod
+    def validate_score(value: float) -> float:
+        if not (1.0 <= value <= 5.0):
+            raise ValueError(f"Score must be between 1 and 5, but found {value}.")
+        return value
+
+
 class Chunker(BaseModel):
     """
     Helper
     """
 
-    config: Dict[str, Regex]
+    config: Dict[str, Dict[Regex, Valence]]
 
     def run(self, text: str, nchr: int) -> List[Dict]:
         if not isinstance(nchr, int) or nchr <= 0:

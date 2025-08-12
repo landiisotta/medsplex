@@ -5,9 +5,15 @@ from medsplex.chunker import Chunker
 
 CONFIG = {
     "compliant": {
-        "regex": "\\b(?:compliant|noncompliant|noncompliance|poor compliance)\\b"
+        "regex": "\\b(?:compliant|noncompliant|noncompliance|poor compliance)\\b",
+        "privileging_score": 2,
+        "stigmatizing_score": 1.5,
     },
-    "engaged": {"regex": "\\b(?:engaged|engagement|engages)\\b"},
+    "engaged": {
+        "regex": "\\b(?:engaged|engagement|engages)\\b",
+        "privileging_score": 2.3,
+        "stigmatizing_score": 5,
+    },
 }
 
 
@@ -80,4 +86,36 @@ def test_chunker_not_valid_regex():
     assert (
         str(err.value)
         == "1 validation error for Chunker\nconfig.compliant.regex\n  Value error, Invalid regex pattern: *abc. Error: nothing to repeat at position 0 [type=value_error, input_value='*abc', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.11/v/value_error"
+    )
+
+
+def test_chunker_not_valid_privileging_valence():
+    with pytest.raises(ValidationError) as err:
+        # This valence is greater than 5 or less than 1
+        Chunker(
+            config={
+                "compliant": {
+                    "privileging_score": 0.2,
+                }
+            }
+        )
+    assert (
+        str(err.value)
+        == "2 validation errors for Chunker\nconfig.compliant.privileging_score.[key]\n  Input should be a valid dictionary or instance of Regex [type=model_type, input_value='privileging_score', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.11/v/model_type\nconfig.compliant.privileging_score\n  Input should be a valid dictionary or instance of Valence [type=model_type, input_value=0.2, input_type=float]\n    For further information visit https://errors.pydantic.dev/2.11/v/model_type"
+    )
+
+
+def test_chunker_not_valid_stigmatizing_valence():
+    with pytest.raises(ValidationError) as err:
+        # This valence is greater than 5 or less than 1
+        Chunker(
+            config={
+                "compliant": {
+                    "stigmatizing_score": 6,
+                }
+            }
+        )
+    assert (
+        str(err.value)
+        == "2 validation errors for Chunker\nconfig.compliant.stigmatizing_score.[key]\n  Input should be a valid dictionary or instance of Regex [type=model_type, input_value='stigmatizing_score', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.11/v/model_type\nconfig.compliant.stigmatizing_score\n  Input should be a valid dictionary or instance of Valence [type=model_type, input_value=6, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.11/v/model_type"
     )
