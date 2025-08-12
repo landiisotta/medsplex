@@ -5,9 +5,21 @@ from medsplex.chunker import Chunker
 
 CONFIG = {
     "compliant": {
-        "regex": "\\b(?:compliant|noncompliant|noncompliance|poor compliance)\\b"
+        "regex": "\\b(?:compliant|noncompliant|noncompliance|poor compliance)\\b",
+        "stigmatizing_score": 1.5,
     },
-    "engaged": {"regex": "\\b(?:engaged|engagement|engages)\\b"},
+    "engaged": {
+        "regex": "\\b(?:engaged|engagement|engages)\\b",
+        "privileging_score": 2.3,
+    },
+    "unreliable": {
+        "regex": "\\b(?:unreliable)\\b",
+    },
+    "unkempt": {
+        "regex": "\\b(?:unkempt)\\b",
+        "privileging_score": 2.3,
+        "stigmatizing_score": 1.5,
+    },
 }
 
 
