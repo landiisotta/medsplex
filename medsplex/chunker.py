@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -33,6 +33,16 @@ class ConfigArguments(BaseModel):
         return value
 
 
+class Chunk(BaseModel):
+    keyword: str
+    text: str
+
+
+class NoteChunks(BaseModel):
+    note_id: Union[str, int]
+    chunks: List[Chunk]
+
+
 class Chunker(BaseModel):
     """
     Helper
@@ -40,16 +50,16 @@ class Chunker(BaseModel):
 
     config: Dict[str, ConfigArguments]
 
-    def run(self, text: str, nchr: int) -> List[Dict]:
+    def run(self, note_id: Union[str, int], text: str, nchr: int) -> NoteChunks:
         if not isinstance(nchr, int) or nchr <= 0:
             raise Exception(f"nchr should be integer >0, but found {nchr}.")
-        chunks = []
+        chunks = {"note_id": note_id, "chunks": []}
         for keyword, options in self.config.items():
             pattern = options.regex
             for match in re.finditer(pattern, text, re.IGNORECASE):
                 start = max(0, match.start() - nchr)
                 end = min(len(text), match.end() + nchr)
-                chunks.append({"keyword": keyword, "text": text[start:end]})
+                chunks["chunks"].append({"keyword": keyword, "text": text[start:end]})
                 if len(text) < nchr:
                     logger.warning(f"Text length {len(text)} is less than {nchr}.")
-        return chunks
+        return NoteChunks(**chunks)
